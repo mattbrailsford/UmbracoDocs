@@ -10,11 +10,12 @@ This guide walks you through installing Umbraco.AI Deploy support.
 
 Before installing Deploy support, ensure you have:
 
-- Umbraco CMS 17.x or later
+- Umbraco CMS 17.0 or later
+- .NET 10.0 or later
 - Umbraco.AI installed and configured
 - Umbraco Deploy installed and configured
-- Optional: Umbraco.AI.Prompt (for prompt deployment)
-- Optional: Umbraco.AI.Agent (for agent deployment)
+
+The Deploy packages pull in their matching Umbraco.AI packages as dependencies. `Umbraco.AI.Prompt.Deploy` requires `Umbraco.AI.Prompt`, and `Umbraco.AI.Agent.Deploy` requires `Umbraco.AI.Agent` — both are installed automatically when you add the Deploy package.
 
 ## Step 1: Install NuGet Packages
 
@@ -86,7 +87,7 @@ If deployment files aren't created when you save entities:
 
 If deployment files contain API keys or other sensitive data:
 
-1. Use configuration references instead of hardcoded values (e.g., `$OpenAI:ApiKey`)
+1. Use configuration references instead of hardcoded values (e.g., `$Umbraco:AI:Secrets:OpenAIApiKey`)
 2. Configure sensitive data filtering in `appsettings.json` (see [Configuration](configuration.md))
 
 ## Next Steps

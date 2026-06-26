@@ -31,6 +31,18 @@ public class AIOptions
     public string? DefaultChatProfileAlias { get; set; }
     public string? DefaultEmbeddingProfileAlias { get; set; }
     public string? ClassifierChatProfileAlias { get; set; }
+    public string? DefaultSpeechToTextProfileAlias { get; set; }
+
+    public IList<string> AllowedConfigurationKeyPrefixes { get; set; } = new List<string>
+    {
+        "Umbraco:AI:Secrets",
+        "Umbraco:AI:Variables",
+    };
+
+    public IList<string> SecretConfigurationKeyPrefixes { get; set; } = new List<string>
+    {
+        "Umbraco:AI:Secrets",
+    };
 }
 ```
 
@@ -38,11 +50,14 @@ public class AIOptions
 
 ## Properties
 
-| Property                       | Type      | Description                                        |
-| ------------------------------ | --------- | -------------------------------------------------- |
-| `DefaultChatProfileAlias`      | `string?` | Fallback default profile alias for chat operations |
-| `DefaultEmbeddingProfileAlias` | `string?` | Fallback default profile alias for embeddings      |
-| `ClassifierChatProfileAlias`   | `string?` | Fallback profile alias for classification tasks    |
+| Property                          | Type      | Description                                             |
+| --------------------------------- | --------- | ------------------------------------------------------- |
+| `DefaultChatProfileAlias`         | `string?` | Fallback default profile alias for chat operations      |
+| `DefaultEmbeddingProfileAlias`    | `string?` | Fallback default profile alias for embeddings           |
+| `ClassifierChatProfileAlias`      | `string?` | Fallback profile alias for classification tasks         |
+| `DefaultSpeechToTextProfileAlias` | `string?` | Fallback default profile alias for speech-to-text       |
+| `AllowedConfigurationKeyPrefixes` | `IList<string>` | Configuration sections that settings may resolve via `$` references. Defaults to `Umbraco:AI:Secrets` and `Umbraco:AI:Variables` |
+| `SecretConfigurationKeyPrefixes`  | `IList<string>` | The subset of allowed prefixes treated as secret. Values under these may only be referenced from sensitive fields. Defaults to `Umbraco:AI:Secrets` |
 
 ## Configuration
 
@@ -54,13 +69,68 @@ public class AIOptions
         "AI": {
             "DefaultChatProfileAlias": "content-assistant",
             "DefaultEmbeddingProfileAlias": "document-embeddings",
-            "ClassifierChatProfileAlias": "fast-classifier"
+            "ClassifierChatProfileAlias": "fast-classifier",
+            "DefaultSpeechToTextProfileAlias": "voice-transcription"
         }
     }
 }
 ```
 
 {% endcode %}
+
+## Configuration References
+
+Editable model settings (such as connection API keys) support a `$Key:Path` syntax that resolves to a configuration value at runtime, letting you keep credentials and per-environment values in configuration rather than the database. For example, a connection's API Key field set to `$Umbraco:AI:Secrets:OpenAIApiKey` reads from:
+
+{% code title="appsettings.json" %}
+
+```json
+{
+    "Umbraco": {
+        "AI": {
+            "Secrets": {
+                "OpenAIApiKey": "sk-your-actual-key"
+            },
+            "Variables": {
+                "OpenAIEndpoint": "https://api.openai.com/v1"
+            }
+        }
+    }
+}
+```
+
+{% endcode %}
+
+References resolve only from the sections listed in `AllowedConfigurationKeyPrefixes`. Two sections are allowed by default:
+
+- `Umbraco:AI:Secrets` - for sensitive values (API keys, tokens). Listed in `SecretConfigurationKeyPrefixes`, so these values may only be referenced from settings fields marked `[AIField(IsSensitive = true)]`.
+- `Umbraco:AI:Variables` - for non-sensitive per-environment values (endpoints, IDs, flags). These may be referenced from any field.
+
+Prefix matching is segment-aware and case-insensitive: `Umbraco:AI:Secrets` permits `Umbraco:AI:Secrets:OpenAIApiKey` but not `Umbraco:AI:SecretsBackup:Key`.
+
+To reference values that already live in another configuration section, add that section's prefix to `AllowedConfigurationKeyPrefixes`:
+
+{% code title="appsettings.json" %}
+
+```json
+{
+    "Umbraco": {
+        "AI": {
+            "AllowedConfigurationKeyPrefixes": [
+                "Umbraco:AI:Secrets",
+                "Umbraco:AI:Variables",
+                "OpenAI"
+            ]
+        }
+    }
+}
+```
+
+{% endcode %}
+
+{% hint style="info" %}
+`AllowedConfigurationKeyPrefixes` and `SecretConfigurationKeyPrefixes` are configured in `appsettings.json` only - they are not editable from the backoffice.
+{% endhint %}
 
 ## Precedence
 
@@ -141,6 +211,7 @@ Override configuration via environment variables:
 export Umbraco__AI__DefaultChatProfileAlias=production-chat
 export Umbraco__AI__DefaultEmbeddingProfileAlias=production-embedding
 export Umbraco__AI__ClassifierChatProfileAlias=fast-classifier
+export Umbraco__AI__DefaultSpeechToTextProfileAlias=production-speech
 ```
 
 {% endcode %}

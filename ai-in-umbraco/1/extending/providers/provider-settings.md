@@ -18,24 +18,24 @@ The `[AIField]` attribute decorates setting properties with UI metadata:
     Label = "Display Label",           // Shown in the UI
     Description = "Help text",         // Description below the field
     EditorUiAlias = "Umb.PropertyEditorUi.TextBox",  // Umbraco editor
-    DefaultValue = "default",          // Default value
     SortOrder = 1                       // Display order
 )]
-public string? MyProperty { get; set; }
+public string? MyProperty { get; set; } = "default";  // Set defaults on the property itself
 ```
 
 {% endcode %}
 
 ## Properties
 
-| Property        | Type   | Description                                     |
-| --------------- | ------ | ----------------------------------------------- |
-| `Label`         | string | Display label in the UI                         |
-| `Description`   | string | Help text shown below the field                 |
-| `EditorUiAlias` | string | Umbraco property editor UI alias                |
-| `SortOrder`     | int    | Order in which settings are displayed            |
-| `IsSensitive`   | bool   | Marks the field as sensitive (value masked in UI) |
-| `Group`         | string | Groups settings under a collapsible heading      |
+| Property        | Type     | Description                                       |
+| --------------- | -------- | ------------------------------------------------- |
+| `Label`         | `string` | Display label in the UI                           |
+| `Description`   | `string` | Help text shown below the field                   |
+| `EditorUiAlias` | `string` | Umbraco property editor UI alias                  |
+| `EditorConfig`  | `string` | Configuration for the editor UI                   |
+| `SortOrder`     | `int`    | Order in which settings are displayed             |
+| `IsSensitive`   | `bool`   | Marks the field as sensitive (value masked in UI) |
+| `Group`         | `string` | Groups settings under a collapsible heading       |
 
 ## Automatic Type Inference
 
@@ -60,7 +60,7 @@ public class MyProviderSettings
 {
     [AIField(
         Label = "API Key",
-        Description = "Your API key. Supports config references like $MyProvider:ApiKey",
+        Description = "Your API key. Supports config references like $Umbraco:AI:Secrets:MyProviderApiKey",
         SortOrder = 1)]
     [Required]
     public required string ApiKey { get; set; }
@@ -68,28 +68,24 @@ public class MyProviderSettings
     [AIField(
         Label = "Base URL",
         Description = "Override the default API endpoint",
-        DefaultValue = "https://api.myprovider.com",
         SortOrder = 2)]
-    public string? BaseUrl { get; set; }
+    public string? BaseUrl { get; set; } = "https://api.myprovider.com";
 
     [AIField(
         Label = "Max Retries",
         Description = "Number of retry attempts for failed requests",
-        DefaultValue = 3,
         SortOrder = 3)]
     public int MaxRetries { get; set; } = 3;
 
     [AIField(
         Label = "Enable Logging",
         Description = "Log all requests and responses",
-        DefaultValue = false,
         SortOrder = 4)]
     public bool EnableLogging { get; set; }
 
     [AIField(
         Label = "Timeout (seconds)",
         Description = "Request timeout in seconds",
-        DefaultValue = 30.0,
         SortOrder = 5)]
     public double TimeoutSeconds { get; set; } = 30.0;
 }
@@ -132,17 +128,21 @@ Non-nullable properties without `[Required]` automatically have a required valid
 
 ## Configuration References
 
-Settings values starting with `$` are resolved from `appsettings.json`:
+Settings values starting with `$` are resolved from configuration. References resolve from the `Umbraco:AI:Secrets` section (sensitive values) and `Umbraco:AI:Variables` section (non-sensitive values) by default.
 
-**In the UI:** Enter `$MyProvider:ApiKey`
+**In the UI:** Enter `$Umbraco:AI:Secrets:MyProviderApiKey`
 
 **In appsettings.json:**
 {% code title="appsettings.json" %}
 
 ```json
 {
-    "MyProvider": {
-        "ApiKey": "sk-actual-key-here"
+    "Umbraco": {
+        "AI": {
+            "Secrets": {
+                "MyProviderApiKey": "sk-actual-key-here"
+            }
+        }
     }
 }
 ```
@@ -150,6 +150,10 @@ Settings values starting with `$` are resolved from `appsettings.json`:
 {% endcode %}
 
 This keeps secrets out of the database and supports environment-specific values.
+
+{% hint style="info" %}
+Values under `Umbraco:AI:Secrets` may only be referenced from fields marked `IsSensitive = true` (see [Sensitive Settings](#sensitive-settings)). Mark any field that should accept a secret reference as sensitive. To reference values from other configuration sections, add their prefix to `Umbraco:AI:AllowedConfigurationKeyPrefixes` - see [AIOptions](../../reference/configuration/ai-options.md#configuration-references).
+{% endhint %}
 
 ## Sensitive Settings
 
@@ -167,6 +171,10 @@ public string? SecretToken { get; set; }
 ```
 
 {% endcode %}
+
+{% hint style="info" %}
+Sensitive values are encrypted at rest using [ASP.NET Core Data Protection](https://learn.microsoft.com/aspnet/core/security/data-protection/configuration/overview). If the Data Protection keyring isn't persisted across restarts, decryption will fail. This occurs when Windows IIS app pools lack profiles or containers with persistent volumes. The value will appear as `ENC:...` in the UI, and the log will show `The key {guid} was not found in the key ring`. Configure Data Protection to persist keys to a stable store. Alternatively, use configuration references to store secrets in appsettings.json instead of the database.
+{% endhint %}
 
 ## Custom Editors
 

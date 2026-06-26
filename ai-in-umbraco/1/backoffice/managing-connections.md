@@ -37,32 +37,37 @@ Connections store the credentials needed to communicate with AI providers. Manag
 
 When using the OpenAI provider:
 
-| Setting          | Description                     | Required |
-| ---------------- | ------------------------------- | -------- |
-| **API Key**      | Your OpenAI API key             | Yes      |
-| **Organization** | Organization ID (if applicable) | No       |
+| Setting             | Description                                               | Required |
+| ------------------- | --------------------------------------------------------- | -------- |
+| **API Key**         | Your OpenAI API key                                       | Yes      |
+| **Organization ID** | Organization ID (if applicable)                           | No       |
+| **Base URL**        | Override the default OpenAI endpoint (for proxies or compatible providers) | No       |
 
 ## Using Configuration References
 
 Instead of storing API keys directly in the database, use configuration references:
 
-1. Add your API key to `appsettings.json`:
+1. Add your API key to `appsettings.json` under the `Umbraco:AI:Secrets` section:
 
 {% code title="appsettings.json" %}
 
 ```json
 {
-    "OpenAI": {
-        "ApiKey": "sk-your-api-key-here"
+    "Umbraco": {
+        "AI": {
+            "Secrets": {
+                "OpenAIApiKey": "sk-your-api-key-here"
+            }
+        }
     }
 }
 ```
 
 {% endcode %}
 
-2. In the connection settings, enter `$OpenAI:ApiKey` as the API Key value.
+2. In the connection settings, enter `$Umbraco:AI:Secrets:OpenAIApiKey` as the API Key value.
 
-The `$` prefix tells Umbraco.AI to resolve the value from configuration at runtime.
+The `$` prefix tells Umbraco.AI to resolve the value from configuration at runtime. References resolve from the `Umbraco:AI:Secrets` and `Umbraco:AI:Variables` sections by default - see [Configuration References](../concepts/connections.md#configuration-references) for details.
 
 {% hint style="success" %}
 Configuration references keep sensitive values out of the database and allow different values per environment.

@@ -36,7 +36,7 @@
 
 * [Introduction](marketers-and-editors/introduction/README.md)
   * [The Umbraco Engage Section](marketers-and-editors/introduction/the-umbraco-engage-section.md)
-  * [Content Apps](marketers-and-editors/introduction/content-apps.md)
+  * [Workspace Views](marketers-and-editors/introduction/workspace-views.md)
   * [The Umbraco Engage Cookie](marketers-and-editors/introduction/the-umbraco-engage-cookie.md)
 * [Analytics](marketers-and-editors/analytics/README.md)
   * [What is measured by default](marketers-and-editors/analytics/what-is-measured-by-default.md)
@@ -127,6 +127,7 @@
   * [Configuration](developers/settings/configuration.md)
 * [Headless](developers/headless/README.md)
   * [Using the Engage API](developers/headless/using-the-marketing-api.md)
+  * [Forced-Segment header](developers/headless/forced-segment.md)
   * [Headless Example](developers/headless/headless-example.md)
 
 ## Security and Privacy

@@ -1,8 +1,10 @@
 ---
-description: Get an overview of the things changed and fixed in each version of Umbraco Forms.
+description: >-
+  Get an overview of the things changed and fixed in each version of Umbraco
+  Forms.
 ---
 
-# Release notes
+# Release Notes
 
 In this section, we have summarized the changes to Umbraco Forms released in each version. Each version is presented with a link to the [Forms issue tracker](https://github.com/umbraco/Umbraco.Forms.Issues/issues) showing a list of issues resolved in the release. We also link to the individual issues themselves from the detail.
 
@@ -15,6 +17,41 @@ If you are upgrading to a new major version, you can find information about the 
 ## Release history
 
 This section contains the release notes for Umbraco Forms 17 including all changes for this version.
+
+### [17.4.0](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue+label%3Arelease%2F17.4.0) (June 4th 2026)
+* Better support for load balanced environments
+* Refactored front end exports for `@umbraco-forms/backoffice` NPM package
+* Display download for prevalue source files in backoffice [#1581](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1581)
+* Fix date day/month swap for non-US cultures in date fields [#1714](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1714) [#1731](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1731)
+* Set `VariationContext` to submitted culture when retrying a workflow [#1718](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1718)
+* Apply default date range filter on initial load [#1720](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1720)
+* Cache-bust front end assets to ensure users get the latest version after upgrade [#1722](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1722)
+* Fix error when saving a field made mandatory [#1725](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1725)
+* Allow ordering form entries when using `IRecordReaderService` [#1726](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1726)
+* Fix subfolder being created at root instead of selected parent [#1730](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1730)
+
+### [17.4.0-rc](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue+label%3Arelease%2F17.4.0) (May 14th 2026)
+
+* Fix `FormSavingNotification` message display on `CancelOperation` [#1487](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1487)
+* Fix Analytics layout shift when reloading chart [#1689](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1689)
+
+### [17.3.2](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue+label%3Arelease%2F17.3.2) (May 1st 2026)
+
+* Fix: rename `workflow` entity types to avoid clashes with Umbraco Workflow [#1694](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1694)
+
+### [17.3.1](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue+label%3Arelease%2F17.3.1) (April 30th 2026)
+
+* Fix Rich Text field type not allowing blocks [#1194](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1194)
+* Allow editing hidden fields on submitted form entries [#1605](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1605) [#1693](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1693)
+* Reveal workflow action bar on keyboard focus [#1692](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1692)
+* Fix casing for "On Reject" label [#1696](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1696)
+* Resolve variant-aware title in the preview modal [#1699](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1699)
+* Prevent `MigrateSystemDatesToUtc` failure on SQL datetime underflow [#1703](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1703)
+* Add **View entries** entity action for submitted records [#1704](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1704)
+* Localize **Change Record State** action dropdown labels
+* Update design of **Form Picker (Single)** to match CMS style
+* Update design of **Field Type** and **Workflow Type** picker modals
+
 
 ### [17.3.0](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue+label%3Arelease%2F17.3.0) (April 9th 2026)
 
@@ -29,16 +66,14 @@ This release fixes the issue by:
 * Removing the legacy server-side timezone offset conversion in the entries list — the browser now handles UTC-to-local conversion consistently
 
 {% hint style="warning" %}
-
 Data written between v17.0.0 and this release may contain local server timestamps instead of UTC. A SQL script is provided below to correct historical data.
 
 Before running it, set `@TimeZone` to your server's Windows timezone name. Set `@UpgradeDate` to the approximate date you first upgraded to v17.0.0. The script excludes the `UFRecordDataDateTime` table, as those values represent user-entered dates that should not be shifted.
 
 The original `MigrateSystemDatesToUtc` migration contained a duplicate conversion for `UFPrevalueSource`. Created and Updated columns were converted twice. This has been fixed, but sites on v17.0–v17.2 may have double-converted PrevalueSource dates that require manual correction.
-
 {% endhint %}
 
-{% file src="scripts/correct-utc-timestamps.sql" %}
+{% file src=".gitbook/assets/correct-utc-timestamps.sql" %}
 Corrects historical data written with local server time instead of UTC between v17.0.0 and v17.3.0. Set the timezone and cutoff date before running.
 {% endfile %}
 
@@ -51,14 +86,17 @@ Corrects historical data written with local server time instead of UTC between v
 * All items detailed under release candidates for 17.3.0.
 
 ### 17.3.0-rc2 (April 9th 2026)
+
 * Optimized startup performance when processing a large number of forms and records for analytics
 
 ### [17.3.0-rc](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue+label%3Arelease%2F17.3.0) (April 2nd 2026)
 
 #### Analytics
+
 Umbraco Forms now includes built-in analytics that provide insight into how your forms are performing. You can view submission trends over time, monitor workflow success rates, and identify which pages are driving submissions.
 
 #### Other
+
 * Umbraco CMS dependency updated to 17.3.0
 * Optimize record collection query performance
 * Add per-row entity actions to entries table
@@ -84,11 +122,12 @@ Umbraco Forms now includes built-in analytics that provide insight into how your
 * Resolve property editor UI from configured Data Type [#1680](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1680)
 * Add filter by record state (Submitted/Approved/Rejected) to entries list [#1681](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1681)
 
-
 ### 17.2.1
+
 * Fix: string length validation for file upload fields
 
 ### [17.2.0](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.2.0) (March 5th 2026)
+
 * File Upload: Treat JPEG and JPG as equivalent in validation [#1383](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1383)
 * Field Preview: Fix CSS selector for horizontal prevalue spacing [#1635](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1635)
 * Password Field: Fix unknown property editor UI for autocomplete setting [#1636](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1636)
@@ -99,6 +138,7 @@ Umbraco Forms now includes built-in analytics that provide insight into how your
 * All items detailed under release candidates for 17.2.0.
 
 ### 17.2.0-rc2 (February 26th 2026)
+
 * Add global backoffice search for Forms
 * Fix regression with new Forms missing default page, group and data consent field
 * Fix reCAPTCHA Enterprise field not correctly validating assessments
@@ -106,6 +146,7 @@ Umbraco Forms now includes built-in analytics that provide insight into how your
 * Fix export error when form name contains a dot [#1649](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1649)
 
 ### 17.2.0-rc (February 19th 2026)
+
 * Umbraco CMS dependency updated to 17.2.0
 * Add ARIA attributes for form validation accessibility [#1382](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1382)
 * Fix conditions not seeing field values modified by previous workflows [#1464](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1464)
@@ -122,12 +163,15 @@ Umbraco Forms now includes built-in analytics that provide insight into how your
 * Fix sensitive data field showing localization key as tooltip [#1633](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1633)
 
 ### 17.1.3 (February 12th 2026)
+
 * Fix reCAPTCHA Enterprise script not loading correctly on the frontend
 
 ### [17.1.2](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.1.2) (January 30th 2026)
+
 * Fix export path resolution for paths starting with `~` [#1610](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1610)
 
 ### [17.1.1](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.1.1) (January 29th 2026)
+
 * Ensure entries selection can be cleared correctly after delete [#1590](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1590)
 * Ensure entries selection can be cleared completely [#1591](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1591)
 * Add additional exports for NPM package [#1592](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1592)
@@ -135,9 +179,11 @@ Umbraco Forms now includes built-in analytics that provide insight into how your
 * Path traversal and file enumeration vulnerability on Linux/macOS [GHSA-hm5p-82g6-m3xh](https://github.com/umbraco/Umbraco.Forms.Issues/security/advisories/GHSA-hm5p-82g6-m3xh)
 
 ### [17.1.0](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.1.0) (January 22nd 2026)
+
 * All items detailed under release candidates for 17.1.0.
 
 ### [17.1.0-rc2](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.1.0) (January 15th 2026)
+
 * Add confirmation modal for entry bulk deletion [#1490](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1490)
 * Fix prevalue source validation [#1549](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1549)
 * Fix prevalue source dropdown rendering [#1550](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1550)
@@ -160,18 +206,16 @@ Umbraco Forms now includes built-in analytics that provide insight into how your
 A new reCAPTCHA Enterprise field type has been added, providing advanced bot protection using Google's reCAPTCHA Enterprise service.
 
 {% hint style="warning" %}
-
 The "Score Threshold" setting for the reCAPTCHA Enterprise field type is currently not fully functional. This is due to a dependent issue in Umbraco CMS (see [CMS PR #21339](https://github.com/umbraco/Umbraco-CMS/pull/21339)). This will be resolved in a future release.
-
 {% endhint %}
 
 #### Unconfigured reCAPTCHA fields now display as disabled
 
-The reCAPTCHA v2, v3, and Enterprise field types now display as disabled in the form designer when their respective settings are not configured. This prevents editors from adding unconfigured reCAPTCHA fields that would not work on the frontend. 
+The reCAPTCHA v2, v3, and Enterprise field types now display as disabled in the form designer when their respective settings are not configured. This prevents editors from adding unconfigured reCAPTCHA fields that would not work on the frontend.
 
 This change also ensures that field types remain registered. This prevents issues when transferring forms with Umbraco Deploy between environments where reCAPTCHA settings may not yet be configured.
 
-![Disabled reCAPTCHA field type in form designer](images/disabled-fields.png)
+![Disabled reCAPTCHA field type in form designer](.gitbook/assets/disabled-fields.png)
 
 * Umbraco CMS dependency updated to 17.1.0
 * Add reCAPTCHA Enterprise field type [#1046](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1046)
@@ -188,10 +232,13 @@ This change also ensures that field types remain registered. This prevents issue
 * Form Info view: improved references UI and layout
 * Update entry filter UI and hide Entries tab for new forms
 * Set `Cache-Control` headers of form uploads to `private`
+
 ### [17.0.3](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.0.3) (December 17th 2025)
+
 * Fix bug with NPM package exports not resolving correctly [#1556](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1556)
 
 ### [17.0.2](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.0.2) (December 11th 2025)
+
 * Refactored UX for sorting on form designer [#1458](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1458)
 * Render uploaded files as semantically correct HTML [#1373](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1373)
 * Filter out fields from email workflows when 'Include Sensitive Data' is set to false [#1402](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1402)
@@ -199,14 +246,17 @@ This change also ensures that field types remain registered. This prevents issue
 * Fix console error when using `Forms.PropertyEditorUi.TextWithFieldPicker` in custom FieldType or Workflow [#1547](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1547)
 
 ### 17.0.1 (November 27th 2025)
+
 * Fix issues with the 17.0.0 release where migrations would sometimes not complete successfully
 
 ### [17.0.0](https://github.com/umbraco/Umbraco.Forms.Issues/issues?q=is%3Aissue%20state%3Aclosed%20label%3Arelease%2F17.0.0) (November 27th 2025)
+
 * Update Forms dependencies to 17.0.0
 * All items detailed under release candidates for 17.0.0.
 * JavaScript now correctly finds the form config element when it is not adjacent
 
 ### 17.0.0-rc4 (November 25th 2025)
+
 * Stop "Save and preview" modal from displaying an interstitial state
 * Adds additional exports to `@umbraco-forms/backoffice` NPM package
 * Razor email templates now format URLs as `UrlMode.Absolute` [#1414](https://github.com/umbraco/Umbraco.Forms.Issues/issues/1414)
